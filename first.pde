@@ -31,7 +31,7 @@ float[] coordAndRadiusOfInscribed(float XA, float YA)
   return result;
 }
 
-float coordAndRadiusOfCircumScribed(float XA, float YA)
+float circumRadius(float XA, float YA)
 {
   float BA = sqrt(sq(XA - xB) + sq(YA - yB));
   float AC = sqrt(sq(xC - XA) + sq(yC - YA));
@@ -40,9 +40,18 @@ float coordAndRadiusOfCircumScribed(float XA, float YA)
    float s = (BA + AC + BC) / 2;
    float area = sqrt(s * (s - BA) * (s - BC) * (s - AC));
    
-   float radius = (BA * BC * AC) / 4 / area;
+   float radius = (BA * BC * AC) / 2 / area;
    
    return radius;
+}
+
+float[] circumCenter(float XA, float YA)
+{
+  float d = 2 * (XA * (yB - yC) + xB * (yC - yA) + xC * (yA - yB));
+  float ux = ((XA * XA + YA * YA) * (yB - yC) + (xB * xB + yB * yB) * (yC - YA) + (xC * xC + yC * yC) * (YA - yB)) / d;
+  float uy = ((XA * XA + YA * YA) * (xC - xB) + (xB * xB + yB * yB) * (XA - xC) + (xC * xC + yC * yC) * (xB - XA)) / d;
+  float[] result = {ux, uy};
+  return result;
 }
 
 void mouseClicked() {
@@ -57,15 +66,15 @@ void draw()
 {
   
   background(144);
-  //fill(0, 255, 0);
-  //rect(30, 20, 55, 55, 45);
   
   fill(255, .9);
   triangle(xA, yA, xB, yB, xC, yC);
   float[] result = coordAndRadiusOfInscribed(xA, yA);
   fill(255, .9);
   circle(result[0], result[1], result[2] * 2);
-  //println(result[2]);
+  
+  float[] circum = circumCenter(xA, yA);
+  circle(circum[0], circum[1], circumRadius(xA, yA));
   if(to)
     xA += 1;
   else  
